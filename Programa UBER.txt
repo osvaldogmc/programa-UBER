@@ -1,0 +1,98 @@
+from math import sqrt
+from datetime import datetime
+
+def registrar_vehiculo():
+    nombres = input('Ingrese nombres:')
+    apellidos = input('Ingrese apellidos:')
+    rut = input('Ingrese rut con guion:')
+    patente = input('Ingrese patente vehiculo:')
+    telefono = input('Ingrese telefono:')
+    correo = input('Ingrese correo:')
+    fecha_nacimiento = input('Ingrese fecha de nacimiento (dd/mm/aaaa)?')
+    marca_vehiculo = input('Ingresa marca de su vehiculo:')
+    color = input('Ingrese color vehiculo:')
+    registro = {'nombres': nombres, 'apellidos': apellidos,
+                'rut': rut, 'patente': patente, 'telefono': telefono,
+                'correo': correo, 'fecha_nacimiento': fecha_nacimiento,
+                'marca_vehiculo': marca_vehiculo, 'color': color}
+    return registro
+
+class Punto:
+    def __init__(self, x, y):
+        self.valorXkm = 150
+        self.velocidad = 0
+        self.encencido = False
+        self.x = x
+        self.y = y
+
+    def calcular_distancia(self, xfinal, ifinal):
+        resultado = sqrt((self.x - xfinal)**2 + (self.y - ifinal)**2)
+        return round(resultado, 2)
+
+    def encender_vehiculo(self):
+        self.encencido = True
+
+    def obterner_estado(self):
+        return self.encencido
+
+    def acelerar(self):
+        self.velocidad += 10
+        return self.velocidad
+
+    def calcular_total_pagar(self, KM_recorridos):
+        resultado_final = KM_recorridos * self.valorXkm
+        return round(resultado_final, 0)
+
+
+lista_registro = []
+print('Bienvenido a UBER')
+while True:
+    print('\nMenu Principal')
+    print('(1) Registrar vehiculo')
+    print('(2) Comenzar una carrera')
+    print('(0) salir')
+    opcion = input('Seleccione opcion:')
+    if opcion == '0':
+        break
+    elif opcion == '1':
+        nuevo_registro = registrar_vehiculo()
+        lista_registro.append(nuevo_registro)
+        print('Se ha registrado correctamente')
+    elif opcion == '2':
+        punto1 = float(input('\nIngrese ubicacion GPS, LATITUD: '))
+        punto2 = float(input('\nIngrese ubicacion GPS. LONGITUD: '))
+        posicion_inicial = Punto(punto1, punto2)
+        print(f'El valor es ${ posicion_inicial.valorXkm } x KM')
+        while True:
+            print('\n(1) Encender vehiculo')
+            print('(2) Acelerar vehiculo')
+            print('(3) Girar vehiculo')
+            print('(4) Finaliza carrera')
+            print('(5) Apagar vehiculo')
+            print('(0) salir')
+            opcion2 = input('\nSeleccione una opcion :')
+            if opcion2 == '0':
+                break
+            elif opcion2 == '1':
+                posicion_inicial.encender_vehiculo()
+                print('\nVehiculo encendido')
+            elif opcion2 == '2':
+                if posicion_inicial.obterner_estado():
+                    print('Usted esta viajando a', posicion_inicial.acelerar(), 'KM/H')
+                else:
+                    print('\nDebe encender el vehiculo')
+            elif opcion2 == '3':
+                print('Vehiculo ha girado')
+            elif opcion2 == '4':
+                final1 = float(input('\nIngrese ubicacion GPS destino, LATITUD: '))
+                final2 = float(input('\nIngrese ubicacion GPS destino, LONGITUD: '))
+                resultado_final = posicion_inicial.calcular_distancia(final1, final2)
+                fecha = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+                print(f'La distacia es { resultado_final } km, el valor a pagar es 'f' ${ posicion_inicial.calcular_total_pagar(resultado_final) }')
+                print(f'\n { fecha }')
+            elif opcion2 == '5':
+                print('El vehiculo se ha apagado')
+            else:
+                print('La opcion elejida no es valida')
+    else:
+        print('La opcion elejida no es valida')
